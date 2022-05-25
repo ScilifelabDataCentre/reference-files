@@ -1,5 +1,5 @@
 ---
-# remember to change image-name and repo-name
+# remember to change repo-name, image-name, and path-to-dockerfile
 
 name: Publish Docker Image
 on:
@@ -57,7 +57,7 @@ jobs:
       - name: Build and Publish
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile
+          file: path-to-dockerfile
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
