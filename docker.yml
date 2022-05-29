@@ -1,19 +1,35 @@
 ---
-# remember to change repo-name, image-name, and path-to-dockerfile
+# remember to change repo-name and set dockerfile(s)/image name(s) in the matrix
 
 name: Publish Docker Image
 on:
-  push: # generate image whenever there is a push to the listed branches
+  # generate image whenever there is a push to the listed branches
+  push:
     branches:
       - main
-  release: # generate images for releases, using the tag name; the newest one will be latest
+  # generate images for releases, using the tag name
+  # the newest one will be latest as well
+  release:
     types: [published]
 jobs:
   push_to_registry:
-    # only generate images when in the named repo (to avoid running the action in forks)
+    # only generate images when in the named repo
+    # (to avoid running the action in forks)
     if: github.repository == 'scilifelabdatacentre/repo-name'
     name: Publish Docker Image
     runs-on: ubuntu-latest
+    # Cancel earlier job if there is a new one for the same branch/release
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+    # Define the images/tags to build; will run in parallell
+    strategy:
+      matrix:
+        include:
+          - dockerfile: Dockerfiles/Dockerfile.backend
+            images: |
+              scilifelabdatacentre/repo-name-backend
+              ghcr.io/scilifelabdatacentre/repo-name-backend
     permissions:
       contents: read
       packages: write
@@ -44,12 +60,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            # list of all images that will be pushed
-            ghcr.io/scilifelabdatacentre/image-name # github
-            docker.io/scilifelabdatacentre/image-name # dockerhub
+          images: ${{ matrix.images }}
           tags: |
-            type=sha,format=long
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -57,9 +69,11 @@ jobs:
       - name: Build and Publish
         uses: docker/build-push-action@v2
         with:
-          file: path-to-dockerfile
+          file: ${{ matrix.dockerfile }}
           context: .
           push: true
+          target: production
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64 # the qemu and buildx steps can be skipped if arm is removed
+          # the qemu and buildx steps can be skipped if arm is removed
+          platforms: linux/amd64,linux/arm64
