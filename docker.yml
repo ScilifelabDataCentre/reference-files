@@ -28,7 +28,7 @@ jobs:
         include:
           - dockerfile: Dockerfiles/Dockerfile.backend
             images: |
-              scilifelabdatacentre/repo-name-backend
+              docker.io/scilifelabdatacentre/repo-name-backend
               ghcr.io/scilifelabdatacentre/repo-name-backend
     permissions:
       contents: read
