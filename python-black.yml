@@ -1,0 +1,17 @@
+---
+# Remember to change "./code-folder" to the folder with the code
+name: Black formatting
+
+on: [push, pull_request]
+
+jobs:
+  BlackFormatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check code formatting with Black
+        uses: psf/black@stable
+        with:
+          options: "-l 100 --check"
+          src: "./code-folder"
