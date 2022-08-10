@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     # Cancel earlier job if there is a new one for the same branch/release
     concurrency:
-      group: ${{ github.ref }}
+      group: ${{ github.ref }}-docker-build
       cancel-in-progress: true
     # Define the images/tags to build; will run in parallell
     strategy:

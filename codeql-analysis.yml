@@ -16,7 +16,7 @@ jobs:
       contents: read
       security-events: write
     concurrency:
-      group: ${{ github.ref }}
+      group: ${{ github.ref }}-codeql
       cancel-in-progress: true
     strategy:
       fail-fast: false
