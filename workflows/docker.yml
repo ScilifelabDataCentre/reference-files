@@ -1,4 +1,7 @@
 ---
+# Build and publish docker image(s)
+# Publishing to Dockerhub requires a username and token
+# as the secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 # remember to change repo-name and set dockerfile(s)/image name(s) in the matrix
 
 name: Publish Docker Image
