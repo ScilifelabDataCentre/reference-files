@@ -1,4 +1,5 @@
 ---
+# Perform Python code linting using black
 # Remember to change "./code-folder" to the folder with the code
 name: Black formatting
 

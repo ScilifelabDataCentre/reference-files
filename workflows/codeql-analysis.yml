@@ -1,3 +1,6 @@
+---
+# Perform CodeQL analysis on the repository code
+
 name: "CodeQL"
 
 on:
