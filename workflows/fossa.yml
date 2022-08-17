@@ -1,3 +1,4 @@
+---
 # Evaluate licenses using Fossa
 # Requires a Fossa API key in the secret FOSSA_API_KEY
 on:
