@@ -1,0 +1,23 @@
+# Evaluate licenses using Fossa
+# Requires a Fossa API key in the secret FOSSA_API_KEY
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+  release:
+    types: [published]
+jobs:
+  fossa-scan:
+    if: github.repository == 'scilifelabdatacentre/repository'
+    concurrency:
+      group: ${{ github.ref }}-fossa
+      cancel-in-progress: true
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: fossas/fossa-action@main # Use a specific version if locking is preferred
+        with:
+          api-key: ${{secrets.FOSSA_API_KEY}}
