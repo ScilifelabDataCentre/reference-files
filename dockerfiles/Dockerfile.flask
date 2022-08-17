@@ -12,7 +12,7 @@ COPY ./requirements.txt /requirements.txt
 RUN pip3 install -r /requirements.txt
 
 # add the relevant code folder to the image
-COPY ./form_manager /code/form_manager
+COPY ./module_name /code/module_name
 WORKDIR /code/
 ENV PYTHONPATH /code
 
@@ -29,5 +29,5 @@ RUN pip install gunicorn
 # parameters for gunicorn (as they would have been set in cli)
 ENV GUNICORN_CMD_ARGS "--bind=0.0.0.0:8000 --workers=2 --thread=4 --worker-class=gthread --forwarded-allow-ips='*' --access-logfile -"
 
-WORKDIR /code/form_manager
+WORKDIR /code/module_name
 CMD ["gunicorn", "app:app"]
