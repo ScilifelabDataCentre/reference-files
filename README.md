@@ -1,6 +1,8 @@
 # Reference files
 
-Templates for projects from SciLifeLab Data Centre
+Templates for projects from SciLifeLab Data Centre.
+
+Any suggestions for improvements are welcome via issues or pull requests.
 
 ## Github Workflows
 
