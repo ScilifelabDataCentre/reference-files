@@ -1,0 +1,33 @@
+# Choose relevant Python version for the build
+FROM python:3.10-alpine as base
+
+# upgrade to latest packages
+RUN apk update && apk upgrade
+
+# install required packages; https://pkgs.alpinelinux.org/packages
+# RUN apk add package-name
+
+# install required modules
+COPY ./requirements.txt /requirements.txt
+RUN pip3 install -r /requirements.txt
+
+# add the relevant code folder to the image
+COPY ./form_manager /code/form_manager
+WORKDIR /code/
+ENV PYTHONPATH /code
+
+# for development, listens to port 5000
+FROM base as dev
+
+CMD ["flask", "run", "-h", "0.0.0.0", "--port", "5000"]
+
+# for production, listens to port 8000
+FROM base as production
+
+RUN pip install gunicorn
+
+# parameters for gunicorn (as they would have been set in cli)
+ENV GUNICORN_CMD_ARGS "--bind=0.0.0.0:8000 --workers=2 --thread=4 --worker-class=gthread --forwarded-allow-ips='*' --access-logfile -"
+
+WORKDIR /code/form_manager
+CMD ["gunicorn", "app:app"]
