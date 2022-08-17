@@ -17,4 +17,5 @@ Templates for common workflows:
 Templates for common Docker builds:
 
 * Build a Hugo project and put it in an nginx container (`Dockerfile.hugo`)
-* Set up a Python Flask project for use in dev or production (`Dockerfile.flask`)
+* Set up a Python Flask project for use in development or production (`Dockerfile.flask`)
+* Set up a Quasar project for development or production (`Dockerfile.quasar`)
