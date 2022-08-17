@@ -16,4 +16,4 @@ Templates for common workflows:
 
 Templates for common Docker builds:
 
-* Build a Hugo project and put it in an nginx container (`Dockerfile-hugo`)
+* Build a Hugo project and put it in an nginx container (`Dockerfile.hugo`)
