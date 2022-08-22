@@ -11,6 +11,8 @@ jobs:
       group: ${{ github.ref }}-black
       cancel-in-progress: true
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v3
 
