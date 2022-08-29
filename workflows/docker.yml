@@ -36,6 +36,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
