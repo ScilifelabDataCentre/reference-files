@@ -76,14 +76,6 @@ jobs:
           push: false
           target: production
           tags: ghcr.io/${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}
-      - name: Build for scan
-        uses: docker/build-push-action@v3
-        with:
-          file: ${{ matrix.dockerfile }}
-          context: .
-          push: false
-          target: production
-          tags: ghcr.io/${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.7.1
         with:
