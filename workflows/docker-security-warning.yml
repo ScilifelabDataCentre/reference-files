@@ -1,5 +1,6 @@
 ---
 # Build and publish docker image(s)
+# The created image will be checked by trivy and security issues will be published to the repositorys security tab
 # Publishing to Dockerhub requires a username and token
 # as the secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 # remember to change repo-name and set dockerfile(s)/image name(s) in the matrix
@@ -36,6 +37,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -64,6 +66,36 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+      - name: Ensure lowercase name
+        run: echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+      - name: Build for scan
+        uses: docker/build-push-action@v3
+        with:
+          file: ${{ matrix.dockerfile }}
+          context: .
+          push: false
+          target: production
+          tags: ghcr.io/${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}
+      - name: Build for scan
+        uses: docker/build-push-action@v3
+        with:
+          file: ${{ matrix.dockerfile }}
+          context: .
+          push: false
+          target: production
+          tags: ghcr.io/${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.7.1
+        with:
+          image-ref: 'ghcr.io/${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: trivy-build
       - name: Build and Publish
         uses: docker/build-push-action@v3
         with:
