@@ -12,7 +12,7 @@ jobs:
   fossa-scan:
     if: github.repository == 'scilifelabdatacentre/repository'
     concurrency:
-      group: ${{ github.ref }}-fossa
+      group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
       cancel-in-progress: true
     permissions:
       contents: read
